@@ -24,7 +24,7 @@ function layout(gate, _P)
     gate:merge_into(nandgate)
 
    -- draw connections
-    gate:merge_into(geometry.path_yx(generics.metal(1), {
+    gate:merge_into(geometry.path_xy(generics.metal(1), {
         orgate:get_anchor("Z"), nandgate:get_anchor("B")
     }, bp.sdwidth))
 
@@ -38,4 +38,5 @@ function layout(gate, _P)
     gate:add_port("Z", generics.metal(2), nandgate:get_anchor("Z"))
     gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 + bp.pwidth + bp.powerspace + bp.powerwidth / 2))
     gate:add_port("VSS", generics.metal(1), point.create(0, -bp.separation / 2 - bp.nwidth - bp.powerspace - bp.powerwidth / 2))
+
 end
