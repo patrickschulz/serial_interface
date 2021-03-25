@@ -14,18 +14,16 @@ function layout(gate, _P)
     pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
 
     -- or_and_inv_221 gate & ff_in 
-    local orandinv221_in =
-        pcell.create_layout("logic/or_and_inv_221"):move_anchor("right")
+    local orandinv221_in = pcell.create_layout("or_and_inv_221"):move_anchor("right")
     gate:merge_into(orandinv221_in)
 
-    local ff_in = pcell.create_layout("logic/dff"):move_anchor("left",
-                                                               orandinv221_in:get_anchor(
-                                                                   "right"))
+    local ff_in = pcell.create_layout("logic/dff"):move_anchor("left")
 
     gate:merge_into(ff_in)
 
+    ---[[
     -- or_and_inv_221 gate & ff_buf, location is above ff_in, needs to be flipped in y axis
-    local orandinv221_buf = pcell.create_layout("logic/or_and_inv_221")
+    local orandinv221_buf = pcell.create_layout("or_and_inv_221")
     orandinv221_buf:flipy()
     orandinv221_buf:move_anchor("VDD", orandinv221_in:get_anchor("VDD"))
     gate:merge_into(orandinv221_buf)
@@ -41,14 +39,14 @@ function layout(gate, _P)
     inv_buf:flipy()
     gate:merge_into(inv_buf)
 
-    local orandinv21 = pcell.create_layout("logic/or_and_inv_21"):move_anchor(
+    local orandinv21 = pcell.create_layout("or_and_inv_21"):move_anchor(
                            "right", orandinv221_buf:get_anchor("left"))
     orandinv21:flipy()
     gate:merge_into(orandinv21)
 
     -- or_and_inv_221 gate & ff_out, location is above ff_buf
     local orandinv221_out =
-        pcell.create_layout("logic/or_and_inv_221"):move_anchor("VSS",
+        pcell.create_layout("or_and_inv_221"):move_anchor("VSS",
                                                                 orandinv221_buf:get_anchor(
                                                                     "VSS"))
     gate:merge_into(orandinv221_out)
@@ -63,4 +61,5 @@ function layout(gate, _P)
                                                                           "left"))
     gate:merge_into(inv_out)
 
+    --]]
 end
