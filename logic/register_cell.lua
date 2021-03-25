@@ -1,7 +1,7 @@
 --[[
-          INV   OAI_221     FF_OUT  
-   OAI_21 INV   OAI_221     FF_BUF
-                OAI_221     FF_IN
+    INV   INV    OAI_221     FF_OUT  
+   OAI_21 INV    OAI_221     FF_BUF
+          NAND   OAI_221     FF_IN
 ]] --
 function parameters() pcell.reference_cell("logic/base") end
 
