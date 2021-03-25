@@ -62,9 +62,10 @@ function layout(gate, _P)
                         nandgate:get_anchor("B")))
         
 
-    gate:inherit_alignment_box(andgate)
     gate:inherit_alignment_box(orgate_c)
     gate:inherit_alignment_box(orgate_b)
+    gate:inherit_alignment_box(andgate)
+    gate:inherit_alignment_box(nandgate)
 
     -- ports
     gate:add_port("A", generics.metal(1), andgate:get_anchor("A"))
