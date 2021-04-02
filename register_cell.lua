@@ -2,7 +2,8 @@
     INV   INV    OAI_221     FF_OUT  
    OAI_21 INV    OAI_221     FF_BUF
           NAND   OAI_221     FF_IN
---]] function parameters() pcell.reference_cell("logic/base") end
+--]] 
+function parameters() pcell.reference_cell("logic/base") end
 
 function layout(gate, _P)
     local bp = pcell.get_parameters("logic/base")
@@ -349,6 +350,11 @@ function layout(gate, _P)
     gate:merge_into(geometry.rectangle(generics.via(1, 5), bp.sdwidth,
                                        bp.sdwidth):translate(
                         ff_buf:get_anchor("CLK")))
+
+    gate:inherit_alignment_box(orandinv21)
+    gate:inherit_alignment_box(ff_out)
+    gate:inherit_alignment_box(ff_in)
+
 
     -- add ports
     gate:add_port("CLK", generics.metal(1), inv_out_right:get_anchor("I"))
