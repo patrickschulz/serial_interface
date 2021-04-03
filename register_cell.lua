@@ -351,9 +351,6 @@ function layout(gate, _P)
                                        bp.sdwidth):translate(
                         ff_buf:get_anchor("CLK")))
 
-    gate:inherit_alignment_box(orandinv21)
-    gate:inherit_alignment_box(ff_out)
-    gate:inherit_alignment_box(ff_in)
 
 
     -- add ports
