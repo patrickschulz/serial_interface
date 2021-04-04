@@ -354,8 +354,8 @@ function layout(gate, _P)
     gate:add_port("CLK", generics.metal(1), inv_out_right:get_anchor("I"))
     gate:add_port("RST", generics.metal(1), orandinv21:get_anchor("B1"))
     gate:add_port("UPD", generics.metal(1), nand_in:get_anchor("B"))
-    gate:add_port("CIN", generics.metal(1), orandinv221_in:get_anchor("C2"))
-    gate:add_port("COUT", generics.metal(1), ff_out:get_anchor("QN"))
+    gate:add_port("DIN", generics.metal(1), orandinv221_in:get_anchor("C2"))
+    gate:add_port("DOUT", generics.metal(1), ff_out:get_anchor("QN"))
     gate:add_port("BOUT", generics.metal(1), ff_buf:get_anchor("QN"))
 end
 
