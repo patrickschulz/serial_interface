@@ -2,8 +2,7 @@
     INV   INV    OAI_221     FF_OUT  
    OAI_21 INV    OAI_221     FF_BUF
           NAND   OAI_221     FF_IN
---]] 
-function parameters() pcell.reference_cell("logic/base") end
+--]] function parameters() pcell.reference_cell("logic/base") end
 
 function layout(gate, _P)
     local bp = pcell.get_parameters("logic/base")
@@ -240,7 +239,7 @@ function layout(gate, _P)
 
     gate:merge_into(geometry.path_xy(generics.metal(4), {
         inv_out_left:get_anchor("O"),
-        orandinv221_in:get_anchor("C1") + point.create(0, bp.sdwidth * -4),
+        orandinv221_in:get_anchor("C1") + point.create(0, bp.sdwidth * -6),
         orandinv221_in:get_anchor("C1"), orandinv221_in:get_anchor("C1")
     }, bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 4), bp.sdwidth,
@@ -296,30 +295,29 @@ function layout(gate, _P)
                                        bp.sdwidth):translate(
                         orandinv221_in:get_anchor("B2")))
 
-    
     gate:merge_into(geometry.path_xy(generics.metal(4), {
         orandinv221_in:get_anchor("B2"),
-        orandinv221_in:get_anchor("B2") + point.create(bp.sdwidth*12,0),
-        orandinv221_buf:get_anchor("C2") + point.create(0, bp.sdwidth*6),
-        orandinv221_buf:get_anchor("C2"),
+        orandinv221_in:get_anchor("B2") + point.create(bp.sdwidth * 12, 0),
+        orandinv221_buf:get_anchor("C2") + point.create(0, bp.sdwidth * 6),
+        orandinv221_buf:get_anchor("C2")
     }, bp.sdwidth))
 
     -- bit_out
-    gate:merge_into(geometry.path_xy(generics.metal(5), {
+    gate:merge_into(geometry.path_xy(generics.metal(2), {
         ff_buf:get_anchor("QN"),
-        orandinv221_buf:get_anchor("B2"),
+        orandinv221_buf:get_anchor("B2") + point.create(0, bp.sdwidth * 4),
+        orandinv221_buf:get_anchor("B2")
     }, bp.sdwidth))
-    gate:merge_into(geometry.rectangle(generics.via(1, 5), bp.sdwidth,
+    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(
                         ff_buf:get_anchor("QN")))
-    gate:merge_into(geometry.rectangle(generics.via(1, 5), bp.sdwidth,
+    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(
                         orandinv221_buf:get_anchor("B2")))
 
     -- chain_out
     gate:merge_into(geometry.path_xy(generics.metal(4), {
-        ff_out:get_anchor("QN"),
-        orandinv221_out:get_anchor("B2"),
+        ff_out:get_anchor("QN"), orandinv221_out:get_anchor("B2")
     }, bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 4), bp.sdwidth,
                                        bp.sdwidth):translate(
@@ -330,8 +328,7 @@ function layout(gate, _P)
 
     -- clk connections
     gate:merge_into(geometry.path(generics.metal(4), {
-        ff_buf:get_anchor("CLK"),
-        ff_in:get_anchor("CLK"),
+        ff_buf:get_anchor("CLK"), ff_in:get_anchor("CLK")
     }, bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 4), bp.sdwidth,
                                        bp.sdwidth):translate(
@@ -340,18 +337,17 @@ function layout(gate, _P)
                                        bp.sdwidth):translate(
                         ff_in:get_anchor("CLK")))
 
-    gate:merge_into(geometry.path_xy(generics.metal(5), {
+    gate:merge_into(geometry.path_xy(generics.metal(2), {
         inv_out_right:get_anchor("I"),
-        ff_buf:get_anchor("CLK"),
+        ff_buf:get_anchor("CLK") + point.create(0, bp.sdwidth * -8),
+        ff_buf:get_anchor("CLK")
     }, bp.sdwidth))
-    gate:merge_into(geometry.rectangle(generics.via(1, 5), bp.sdwidth,
+    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(
                         inv_out_right:get_anchor("I")))
-    gate:merge_into(geometry.rectangle(generics.via(1, 5), bp.sdwidth,
+    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(
                         ff_buf:get_anchor("CLK")))
-
-
 
     -- add ports
     gate:add_port("CLK", generics.metal(1), inv_out_right:get_anchor("I"))
