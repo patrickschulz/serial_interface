@@ -339,6 +339,7 @@ function layout(gate, _P)
 
     gate:merge_into(geometry.path_xy(generics.metal(2), {
         inv_out_right:get_anchor("I"),
+        inv_out_right:get_anchor("I") + point.create(bp.sdwidth * 2, 0),
         ff_buf:get_anchor("CLK") + point.create(0, bp.sdwidth * -8),
         ff_buf:get_anchor("CLK")
     }, bp.sdwidth))
