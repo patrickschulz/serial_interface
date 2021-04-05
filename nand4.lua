@@ -20,7 +20,6 @@ function layout(gate, _P)
     -- place cells
     local andgate_a = pcell.create_layout("logic/and_gate"):move_anchor("right")
     gate:merge_into_update_alignmentbox(andgate_a)
-    pcell.pop_overwrites("logic/base")
 
     local andgate_b = pcell.create_layout("logic/and_gate"):move_anchor("left",
                                                                         andgate_a:get_anchor(
