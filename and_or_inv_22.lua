@@ -52,4 +52,12 @@ function layout(gate, _P)
     gate:add_port("B1", generics.metal(1), andgate_b:get_anchor("A"))
     gate:add_port("B2", generics.metal(1), andgate_b:get_anchor("B"))
     gate:add_port("Z", generics.metal(1), norgate:get_anchor("Z"))
+    gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 +
+                                                             bp.pwidth +
+                                                             bp.powerspace +
+                                                             bp.powerwidth / 2))
+    gate:add_port("VSS", generics.metal(1), point.create(0, -bp.separation / 2 -
+                                                             bp.nwidth -
+                                                             bp.powerspace -
+                                                             bp.powerwidth / 2))
 end

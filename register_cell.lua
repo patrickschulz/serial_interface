@@ -357,5 +357,13 @@ function layout(gate, _P)
     gate:add_port("DIN", generics.metal(1), orandinv221_in:get_anchor("C2"))
     gate:add_port("DOUT", generics.metal(1), ff_out:get_anchor("QN"))
     gate:add_port("BOUT", generics.metal(1), ff_buf:get_anchor("QN"))
+    gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 +
+                                                             bp.pwidth +
+                                                             bp.powerspace +
+                                                             bp.powerwidth / 2))
+    gate:add_port("VSS", generics.metal(1), point.create(0, -bp.separation / 2 -
+                                                             bp.nwidth -
+                                                             bp.powerspace -
+                                                             bp.powerwidth / 2))
 end
 

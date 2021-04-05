@@ -70,4 +70,12 @@ function layout(gate, _P)
     gate:add_port("S", generics.metal(1), not_left:get_anchor("I"))
     gate:add_port("B", generics.metal(1), andorinv22:get_anchor("B2"))
     gate:add_port("Z", generics.metal(1), not_right:get_anchor("O"))
+    gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 +
+                                                             bp.pwidth +
+                                                             bp.powerspace +
+                                                             bp.powerwidth / 2))
+    gate:add_port("VSS", generics.metal(1), point.create(0, -bp.separation / 2 -
+                                                             bp.nwidth -
+                                                             bp.powerspace -
+                                                             bp.powerwidth / 2))
 end
