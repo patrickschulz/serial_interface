@@ -19,13 +19,11 @@ function layout(gate, _P)
                                 "right")
         elseif i % 2 == 0 then
             daisycells[i] = pcell.create_layout("register_cell"):move_anchor(
-                                "bottom",
-                                daisycells[i - 1]:get_anchor("bottom") +
-                                    point.create(0, bottom_add))
+                                "bottom", daisycells[i - 1]:get_anchor("top"))
         else
             daisycells[i] = pcell.create_layout("register_cell"):flipy()
             daisycells[i]:move_anchor("bottom", daisycells[i - 1]:get_anchor(
-                                          "top") + point.create(0, 1100))
+                                          "top"))
         end
         gate:merge_into_update_alignmentbox(daisycells[i])
     end
