@@ -10,7 +10,6 @@ function layout(gate, _P)
 
     local daisycells = {}
     local cell_amount = 8
-    local bottom_add = 2200
 
     -- place cells
     for i = 0, cell_amount - 1 do
