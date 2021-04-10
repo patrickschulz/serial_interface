@@ -1,6 +1,9 @@
 function parameters() pcell.reference_cell("logic/base") end
 
-local function generate_reg_vector(gate, width, own_anchor, to_anchor, _P)
+-- generate stack of flipflops representing a vector with height=width, place bottom cells own_anchor to to_anchor
+-- is_flip_y can be true if you need to flip the bottoms power rails
+local function generate_reg_vector(gate, width, own_anchor, to_anchor,
+                                   is_flip_y, _P)
 
     local vector = {}
 
@@ -12,15 +15,17 @@ local function generate_reg_vector(gate, width, own_anchor, to_anchor, _P)
             else
                 vector[i] =
                     pcell.create_layout("logic/dff"):move_anchor("right")
+                if is_flip_y then vector[i]:flipy() end
             end
         else
             if i % 2 == 0 then
-                vector[i] = pcell.create_layout("logic/dff"):flipy()
-                                :move_anchor("bottom",
-                                             vector[i - 1]:get_anchor("top"))
+                vector[i] = pcell.create_layout("logic/dff")
+                if not is_flip_y then vector[i]:flipy() end
+                vector[i]:move_anchor("bottom", vector[i - 1]:get_anchor("top"))
             else
-                vector[i] = pcell.create_layout("logic/dff"):move_anchor(
-                                "bottom", vector[i - 1]:get_anchor("top"))
+                vector[i] = pcell.create_layout("logic/dff")
+                if is_flip_y then vector[i]:flipy() end
+                vector[i]:move_anchor("bottom", vector[i - 1]:get_anchor("top"))
             end
         end
         gate:merge_into_update_alignmentbox(vector[i])
@@ -49,7 +54,8 @@ function layout(gate, _P)
                                              data_in_shift_reg_reg[0]:get_anchor(
                                                  "right"))
     cmd_rcv_done_reg = generate_reg_vector(gate, 1, "left",
-                                           data_inout_reg_reg[0]:get_anchor("right"))
+                                           data_inout_reg_reg[0]:get_anchor(
+                                               "right"))
     cmd_reg_reg = generate_reg_vector(gate, 2, "left",
                                       cmd_rcv_done_reg[0]:get_anchor("right"))
     en_shift_reg_reg = generate_reg_vector(gate, 2, "left",
