@@ -7,33 +7,31 @@ local function generate_reg_vector(gate, width, own_anchor, to_anchor,
 
     local vector = {}
 
-    for i = 0, width - 1 do
-        if i == 0 then
+    for i = 1, width do
+        if i == 1 then
             if own_anchor and to_anchor then
                 vector[i] = pcell.create_layout("logic/dff")
                 vector[i]:move_anchor(own_anchor, to_anchor)
             else
                 vector[i] =
                     pcell.create_layout("logic/dff"):move_anchor("right")
-                if is_flip_y then vector[i]:flipy() end
             end
         else
             if i % 2 == 0 then
-                vector[i] = pcell.create_layout("logic/dff")
-                if not is_flip_y then vector[i]:flipy() end
+                vector[i] = pcell.create_layout("logic/dff"):flipy()
                 vector[i]:move_anchor("bottom", vector[i - 1]:get_anchor("top"))
             else
                 vector[i] = pcell.create_layout("logic/dff")
-                if is_flip_y then vector[i]:flipy() end
                 vector[i]:move_anchor("bottom", vector[i - 1]:get_anchor("top"))
             end
         end
+        if is_flip_y then vector[i]:flipy() end
         gate:merge_into_update_alignmentbox(vector[i])
     end
     return vector
 end
 
-function layout(gate, _P)
+function layout(gate, _p)
     local bp = pcell.get_parameters("logic/base")
 
     local xpitch = bp.gspace + bp.glength
@@ -41,37 +39,49 @@ function layout(gate, _P)
     -- general settings
     pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
 
-    -- generate bit_count_reg
+    -- generate variable registers
     bit_count_reg = generate_reg_vector(gate, 5)
 
-    -- generate curr_state_reg
-    curr_state_reg = generate_reg_vector(gate, 3, "left",
-                                         bit_count_reg[0]:get_anchor("right"))
-    data_in_shift_reg_reg = generate_reg_vector(gate, 1, "left",
-                                                curr_state_reg[0]:get_anchor(
-                                                    "right"))
-    data_inout_reg_reg = generate_reg_vector(gate, 1, "left",
-                                             data_in_shift_reg_reg[0]:get_anchor(
-                                                 "right"))
-    cmd_rcv_done_reg = generate_reg_vector(gate, 1, "left",
-                                           data_inout_reg_reg[0]:get_anchor(
-                                               "right"))
-    cmd_reg_reg = generate_reg_vector(gate, 2, "left",
-                                      cmd_rcv_done_reg[0]:get_anchor("right"))
-    en_shift_reg_reg = generate_reg_vector(gate, 2, "left",
-                                           cmd_reg_reg[0]:get_anchor("right"))
-    got_start_bit_reg = generate_reg_vector(gate, 1, "left",
-                                            en_shift_reg_reg[0]:get_anchor(
-                                                "right"))
-    rcv_done_reg = generate_reg_vector(gate, 1, "left",
-                                       got_start_bit_reg[0]:get_anchor("right"))
-    reset_shift_reg_reg = generate_reg_vector(gate, 1, "left",
-                                              rcv_done_reg[0]:get_anchor("right"))
-    send_done_reg = generate_reg_vector(gate, 1, "left",
-                                        reset_shift_reg_reg[0]:get_anchor(
-                                            "right"))
-    update_shift_reg_reg = generate_reg_vector(gate, 1, "left",
-                                               send_done_reg[0]:get_anchor(
-                                                   "right"))
+    curr_state_reg = generate_reg_vector(gate, 3, "bottom",
+                                         bit_count_reg[#bit_count_reg]:get_anchor(
+                                             "top"), true)
 
+    data_in_shift_reg_reg = generate_reg_vector(gate, 1, "bottom",
+                                                curr_state_reg[#curr_state_reg]:get_anchor(
+                                                    "top"))
+
+    data_inout_reg_reg = generate_reg_vector(gate, 1, "bottom",
+                                             data_in_shift_reg_reg[#data_in_shift_reg_reg]:get_anchor(
+                                                 "top"), true)
+
+    cmd_rcv_done_reg = generate_reg_vector(gate, 1, "bottom",
+                                           data_inout_reg_reg[#data_inout_reg_reg]:get_anchor(
+                                               "top"))
+
+    cmd_reg_reg = generate_reg_vector(gate, 2, "bottom",
+                                      cmd_rcv_done_reg[#cmd_rcv_done_reg]:get_anchor(
+                                          "top"), true)
+
+    en_shift_reg_reg = generate_reg_vector(gate, 2, "bottom",
+                                           cmd_reg_reg[#cmd_reg_reg]:get_anchor(
+                                               "top"), true)
+    got_start_bit_reg = generate_reg_vector(gate, 1, "bottom",
+                                            en_shift_reg_reg[#en_shift_reg_reg]:get_anchor(
+                                                "top"), true)
+
+    rcv_done_reg = generate_reg_vector(gate, 1, "bottom",
+                                       got_start_bit_reg[#got_start_bit_reg]:get_anchor(
+                                           "top"))
+
+    reset_shift_reg_reg = generate_reg_vector(gate, 1, "bottom",
+                                              rcv_done_reg[#rcv_done_reg]:get_anchor(
+                                                  "top"), true)
+
+    send_done_reg = generate_reg_vector(gate, 1, "bottom",
+                                        reset_shift_reg_reg[#reset_shift_reg_reg]:get_anchor(
+                                            "top"))
+
+    update_shift_reg_reg = generate_reg_vector(gate, 1, "bottom",
+                                               send_done_reg[#send_done_reg]:get_anchor(
+                                                   "top"), true)
 end
