@@ -1,4 +1,9 @@
-function parameters() pcell.reference_cell("logic/base") end
+--[[ 
+    logic FF logic
+    logic FF logic
+    logic FF logic
+    logic FF logic
+ ]] function parameters() pcell.reference_cell("logic/base") end
 
 -- generate stack of flipflops representing a vector with height=width, place bottom cells own_anchor to to_anchor
 -- is_flip_y can be true if you need to flip the bottoms power rails
@@ -39,49 +44,66 @@ function layout(gate, _p)
     -- general settings
     pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
 
-    -- generate variable registers
-    bit_count_reg = generate_reg_vector(gate, 5)
+    -- generate upper right part
 
-    curr_state_reg = generate_reg_vector(gate, 3, "bottom",
-                                         bit_count_reg[#bit_count_reg]:get_anchor(
-                                             "top"), true)
+    rcv_done_reg_1 = pcell.create_layout("logic/dff"):move_anchor("right")
+    gate:merge_into_update_alignmentbox(rcv_done_reg_1)
 
-    data_in_shift_reg_reg = generate_reg_vector(gate, 1, "bottom",
-                                                curr_state_reg[#curr_state_reg]:get_anchor(
-                                                    "top"))
+    curr_state_reg_1 = pcell.create_layout("logic/dff"):flipy():move_anchor(
+                           "top", rcv_done_reg_1:get_anchor("bottom"))
+    gate:merge_into_update_alignmentbox(curr_state_reg_1)
 
-    data_inout_reg_reg = generate_reg_vector(gate, 1, "bottom",
-                                             data_in_shift_reg_reg[#data_in_shift_reg_reg]:get_anchor(
-                                                 "top"), true)
+    bidir_write_reg = pcell.create_layout("logic/dff"):move_anchor("top",
+                                                                   curr_state_reg_1:get_anchor(
+                                                                       "bottom"))
+    gate:merge_into_update_alignmentbox(bidir_write_reg)
 
-    cmd_rcv_done_reg = generate_reg_vector(gate, 1, "bottom",
-                                           data_inout_reg_reg[#data_inout_reg_reg]:get_anchor(
-                                               "top"))
+    cmd_rcv_done_reg = pcell.create_layout("logic/dff"):flipy():move_anchor(
+                           "top", bidir_write_reg:get_anchor("bottom"))
+    gate:merge_into_update_alignmentbox(cmd_rcv_done_reg)
 
-    cmd_reg_reg = generate_reg_vector(gate, 2, "bottom",
-                                      cmd_rcv_done_reg[#cmd_rcv_done_reg]:get_anchor(
-                                          "top"), true)
+    u167 = pcell.create_layout("and_or_inv_21"):move_anchor("right",
+                                                            rcv_done_reg_1:get_anchor(
+                                                                "left"))
+    gate:merge_into_update_alignmentbox(u167)
 
-    en_shift_reg_reg = generate_reg_vector(gate, 2, "bottom",
-                                           cmd_reg_reg[#cmd_reg_reg]:get_anchor(
-                                               "top"), true)
-    got_start_bit_reg = generate_reg_vector(gate, 1, "bottom",
-                                            en_shift_reg_reg[#en_shift_reg_reg]:get_anchor(
-                                                "top"), true)
+    u129 = pcell.create_layout("logic/nand_gate"):flipy():move_anchor("top",
+                                                                      u167:get_anchor(
+                                                                          "bottom"))
+    gate:merge_into_update_alignmentbox(u129)
 
-    rcv_done_reg = generate_reg_vector(gate, 1, "bottom",
-                                       got_start_bit_reg[#got_start_bit_reg]:get_anchor(
-                                           "top"))
+    u175 = pcell.create_layout("and_or_inv_21"):move_anchor("top",
+                                                            u129:get_anchor(
+                                                                "bottom"))
+    gate:merge_into_update_alignmentbox(u175)
 
-    reset_shift_reg_reg = generate_reg_vector(gate, 1, "bottom",
-                                              rcv_done_reg[#rcv_done_reg]:get_anchor(
-                                                  "top"), true)
+    u174 = pcell.create_layout("logic/nand_gate"):flipy():move_anchor("top",
+                                                                      u175:get_anchor(
+                                                                          "bottom"))
+    gate:merge_into_update_alignmentbox(u174)
 
-    send_done_reg = generate_reg_vector(gate, 1, "bottom",
-                                        reset_shift_reg_reg[#reset_shift_reg_reg]:get_anchor(
-                                            "top"))
 
-    update_shift_reg_reg = generate_reg_vector(gate, 1, "bottom",
-                                               send_done_reg[#send_done_reg]:get_anchor(
-                                                   "top"), true)
+
+    u132 = pcell.create_layout("nand4"):move_anchor("left",
+                                                    rcv_done_reg_1:get_anchor("right"))
+    gate:merge_into_update_alignmentbox(u132)
+
+    pcell.push_overwrites("logic/base", {leftdummies = 1, rightdummies = 1})
+
+    u135 = pcell.create_layout("and_or_inv_21"):flipy():move_anchor("top",
+                                                                    u132:get_anchor(
+                                                                        "bottom"))
+    gate:merge_into_update_alignmentbox(u135)
+
+    u141 = pcell.create_layout("and_or_inv_21"):move_anchor("top",
+                                                            u135:get_anchor(
+                                                                "bottom"))
+    gate:merge_into_update_alignmentbox(u141)
+
+    u142 = pcell.create_layout("and_or_inv_21"):flipy():move_anchor("top",
+                                                                    u141:get_anchor(
+                                                                        "bottom"))
+    gate:merge_into_update_alignmentbox(u142)
+
+    pcell.pop_overwrites("logic/base")
 end
