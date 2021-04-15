@@ -2,7 +2,11 @@
     INV   INV    OAI_221     FF_OUT  
    OAI_21 INV    OAI_221     FF_BUF
           NAND   OAI_221     FF_IN
---]] function parameters() pcell.reference_cell("logic/base") end
+--]] 
+function parameters() 
+    pcell.reference_cell("logic/base")
+    pcell.reference_cell("logic/dff")
+end
 
 function layout(gate, _P)
     local bp = pcell.get_parameters("logic/base")
@@ -17,6 +21,7 @@ function layout(gate, _P)
                                "top")
     gate:merge_into_update_alignmentbox(orandinv221_in)
 
+    pcell.push_overwrites("logic/dff", { enableQN = true, enableQ = false })
     local ff_in = pcell.create_layout("logic/dff"):move_anchor("left",
                                                                orandinv221_in:get_anchor(
                                                                    "right"))
@@ -357,6 +362,7 @@ function layout(gate, _P)
     gate:add_port("DIN", generics.metal(1), orandinv221_in:get_anchor("C2"))
     gate:add_port("DOUT", generics.metal(1), ff_out:get_anchor("QN"))
     gate:add_port("BOUT", generics.metal(1), ff_buf:get_anchor("QN"))
+    pcell.pop_overwrites("logic/dff")
     --[[ gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 +
                                                              bp.pwidth +
                                                              bp.powerspace +
