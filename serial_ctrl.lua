@@ -186,8 +186,8 @@ function layout(gate, _p)
     gate:merge_into_update_alignmentbox(bit_count_reg_4)
 
     u158 = pcell.create_layout("logic/not_gate"):flipy():move_anchor("right",
-                                                             bit_count_reg_4:get_anchor(
-                                                                 "left"))
+                                                                     bit_count_reg_4:get_anchor(
+                                                                         "left"))
     gate:merge_into_update_alignmentbox(u158)
 
     u164 = pcell.create_layout("logic/not_gate"):move_anchor("right",
@@ -231,6 +231,43 @@ function layout(gate, _p)
                                                                     u158:get_anchor(
                                                                         "left"))
     gate:merge_into_update_alignmentbox(u157)
+
+    U1_1_3 = pcell.create_layout("half_adder"):move_anchor("right",
+                                                           u163:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(U1_1_3)
+
+    U1_1_2 = pcell.create_layout("half_adder"):flipy():move_anchor("right",
+                                                           u165:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(U1_1_2)
+
+    U1_1_1 = pcell.create_layout("half_adder"):move_anchor("right",
+                                                           u161:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(U1_1_1)
+
+
+    u156 = pcell.create_layout("logic/nand_gate"):flipy():move_anchor("right",
+                                                           u159:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(u156)
+
+
+    u155 = pcell.create_layout("nand3"):flipy():move_anchor("right",
+                                                           u156:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(u155)
+
+    u154 = pcell.create_layout("nor3"):flipy():move_anchor("right",
+                                                           u155:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(u154)
+
+    u150 = pcell.create_layout("and_or_inv_22"):flipy():move_anchor("right",
+                                                           u157:get_anchor(
+                                                               "left"))
+    gate:merge_into_update_alignmentbox(u150)
 
     pcell.pop_overwrites("logic/dff")
 
