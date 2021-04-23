@@ -11,14 +11,12 @@ function layout(gate, _P)
 
     local xpitch = bp.gspace + bp.glength
 
-    -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 1})
-
-    -- place cells
+    pcell.push_overwrites("logic/base", {rightdummies = 1})
     local andgate = pcell.create_layout("logic/and_gate"):move_anchor("right")
     gate:merge_into_update_alignmentbox(andgate)
     pcell.pop_overwrites("logic/base")
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
+
+    pcell.push_overwrites("logic/base", {leftdummies = 1})
 
     local norgate = pcell.create_layout("logic/nor_gate"):move_anchor("left",
                                                                       andgate:get_anchor(

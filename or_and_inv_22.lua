@@ -1,4 +1,3 @@
-
 --[[
 A1 ---- OR
         OR
@@ -14,23 +13,27 @@ function layout(gate, _P)
 
     local xpitch = bp.gspace + bp.glength
 
-    -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
+    -- general settin
 
     -- place cells
+    pcell.push_overwrites("logic/base", {rightdummies = 1})
     local orgate_a = pcell.create_layout("logic/or_gate"):move_anchor("right")
     gate:merge_into_update_alignmentbox(orgate_a)
     pcell.pop_overwrites("logic/base")
 
+    pcell.push_overwrites("logic/base", {leftdummies = 1, rightdummies = 1})
     local orgate_b = pcell.create_layout("logic/or_gate"):move_anchor("left",
-                                                                        orgate_a:get_anchor(
-                                                                            "right"))
-    gate:merge_into_update_alignmentbox(orgate_b)
-
-    local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left",
-                                                                      orgate_b:get_anchor(
+                                                                      orgate_a:get_anchor(
                                                                           "right"))
+    gate:merge_into_update_alignmentbox(orgate_b)
+    pcell.pop_overwrites("logic/base")
+
+    pcell.push_overwrites("logic/base", {leftdummies = 1})
+    local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left",
+                                                                        orgate_b:get_anchor(
+                                                                            "right"))
     gate:merge_into_update_alignmentbox(nandgate)
+    pcell.pop_overwrites("logic/base")
 
     -- draw connections
     gate:merge_into(geometry.path_xy(generics.metal(2), {
@@ -44,7 +47,8 @@ function layout(gate, _P)
                         nandgate:get_anchor("B")))
 
     gate:merge_into(geometry.path_xy(generics.metal(2), {
-        orgate_b:get_anchor("Z") + point.create(0, bp.sdwidth), nandgate:get_anchor("A")
+        orgate_b:get_anchor("Z") + point.create(0, bp.sdwidth),
+        nandgate:get_anchor("A")
     }, bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(

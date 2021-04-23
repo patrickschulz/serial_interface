@@ -16,9 +16,7 @@ function layout(gate, _P)
 
     local xpitch = bp.gspace + bp.glength
 
-    -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
-
+    pcell.push_overwrites("logic/base", {rightdummies = 1})
     local andgate_c = pcell.create_layout("logic/and_gate"):move_anchor("right")
     gate:merge_into_update_alignmentbox(andgate_c)
 
@@ -26,16 +24,21 @@ function layout(gate, _P)
                                                                         andgate_c:get_anchor(
                                                                             "right"))
     gate:merge_into_update_alignmentbox(andgate_b)
+    pcell.pop_overwrites("logic/base")
 
+    pcell.push_overwrites("logic/base", {leftdummies = 1, rightdummies = 1})
     local orgate = pcell.create_layout("logic/or_gate"):move_anchor("left",
                                                                     andgate_b:get_anchor(
                                                                         "right"))
     gate:merge_into_update_alignmentbox(orgate)
+    pcell.pop_overwrites("logic/base")
 
+    pcell.push_overwrites("logic/base", {leftdummies = 1})
     local norgate = pcell.create_layout("logic/nor_gate"):move_anchor("left",
                                                                       orgate:get_anchor(
                                                                           "right"))
     gate:merge_into_update_alignmentbox(norgate)
+    pcell.pop_overwrites("logic/base")
 
     -- draw connections
     gate:merge_into(geometry.path_xy(generics.metal(2), {

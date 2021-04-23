@@ -14,22 +14,24 @@ function layout(gate, _P)
 
     local xpitch = bp.gspace + bp.glength
 
-    -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
-
-    -- place cells
+    pcell.push_overwrites("logic/base", {rightdummies = 1})
     local andgate_a = pcell.create_layout("logic/and_gate"):move_anchor("right")
     gate:merge_into_update_alignmentbox(andgate_a)
+    pcell.pop_overwrites("logic/base")
 
+    pcell.push_overwrites("logic/base", {leftdummies = 1, rightdummies = 1})
     local andgate_b = pcell.create_layout("logic/and_gate"):move_anchor("left",
                                                                         andgate_a:get_anchor(
                                                                             "right"))
     gate:merge_into_update_alignmentbox(andgate_b)
+    pcell.pop_overwrites("logic/base")
 
+    pcell.push_overwrites("logic/base", {leftdummies = 1})
     local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left",
                                                                       andgate_b:get_anchor(
                                                                           "right"))
     gate:merge_into_update_alignmentbox(nandgate)
+    pcell.pop_overwrites("logic/base")
 
     -- draw connections
     gate:merge_into(geometry.path_xy(generics.metal(2), {

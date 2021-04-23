@@ -7,16 +7,17 @@ function layout(gate, _P)
     local xpitch = bp.gspace + bp.glength
 
     -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
-
-    -- place cells
+    pcell.push_overwrites("logic/base", {rightdummies = 0})
     local nand = pcell.create_layout("nand3"):move_anchor("right")
     gate:merge_into_update_alignmentbox(nand)
+    pcell.pop_overwrites("logic/base")
 
+    pcell.push_overwrites("logic/base", {leftdummies = 1})
     local notgate = pcell.create_layout("logic/not_gate"):move_anchor("left",
                                                                       nand:get_anchor(
                                                                           "right"))
     gate:merge_into_update_alignmentbox(notgate)
+    pcell.pop_overwrites("logic/base")
 
     gate:merge_into(geometry.path(generics.metal(1), {
         nand:get_anchor("Z"), notgate:get_anchor("I")
