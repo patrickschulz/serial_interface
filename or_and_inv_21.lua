@@ -15,7 +15,7 @@ function layout(gate, _P)
     pcell.push_overwrites("logic/base", {rightdummies = 1})
     -- or gate
     local orgate = pcell.create_layout("logic/or_gate"):move_anchor("right")
-    gate:merge_into(orgate)
+    gate:merge_into_update_alignmentbox(orgate)
     pcell.pop_overwrites("logic/base")
 
     pcell.push_overwrites("logic/base", {leftdummies = 1})
@@ -23,16 +23,13 @@ function layout(gate, _P)
     local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left",
                                                                         orgate:get_anchor(
                                                                             "right"))
-    gate:merge_into(nandgate)
+    gate:merge_into_update_alignmentbox(nandgate)
     pcell.pop_overwrites("logic/base")
 
     -- draw connections
     gate:merge_into(geometry.path_xy(generics.metal(1), {
         orgate:get_anchor("Z"), nandgate:get_anchor("B")
     }, bp.sdwidth))
-
-    gate:inherit_alignment_box(orgate)
-    gate:inherit_alignment_box(nandgate)
 
     -- ports
     gate:add_port("A", generics.metal(1), nandgate:get_anchor("A"))
