@@ -14,32 +14,35 @@ function parameters() pcell.reference_cell("logic/base") end
 function layout(gate, _P)
     local bp = pcell.get_parameters("logic/base");
 
-    local xpitch = bp.gspace + bp.glength
-
-    -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
-
     -- or gate c
+    pcell.push_overwrites("logic/base", { rightdummies = 1})
     local orgate_c = pcell.create_layout("logic/or_gate"):move_anchor("right")
     gate:merge_into(orgate_c)
+    pcell.pop_overwrites("logic/base")
 
     -- and gate
+    pcell.push_overwrites("logic/base", { leftdummies = 1, rightdummies = 1})
     local andgate = pcell.create_layout("logic/and_gate"):move_anchor("left", orgate_c:get_anchor( "right"))
     gate:merge_into(andgate)
+    pcell.pop_overwrites("logic/base")
 
     -- or gate b
+    pcell.push_overwrites("logic/base", { leftdummies = 1, rightdummies = 1})
     local orgate_b = pcell.create_layout("logic/or_gate"):move_anchor("left", andgate:get_anchor( "right"))
     gate:merge_into(orgate_b)
+    pcell.pop_overwrites("logic/base")
 
     -- nand gate
+    pcell.push_overwrites("logic/base", { leftdummies = 1 })
     local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left", orgate_b:get_anchor( "right"))
     gate:merge_into(nandgate)
+    pcell.pop_overwrites("logic/base")
 
     -- draw connections
-    gate:merge_into(geometry.path_xy(generics.metal(1), {
+    gate:merge_into(geometry.path_yx(generics.metal(1), {
         orgate_c:get_anchor("Z"), andgate:get_anchor("B")
     }, bp.sdwidth))
-    gate:merge_into(geometry.path_xy(generics.metal(1), {
+    gate:merge_into(geometry.path_yx(generics.metal(1), {
         orgate_b:get_anchor("Z"), nandgate:get_anchor("A")
     }, bp.sdwidth))
     gate:merge_into(geometry.path_yx(generics.metal(2), {
