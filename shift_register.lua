@@ -6,7 +6,6 @@ function layout(gate, _P)
     local xpitch = bp.gspace + bp.glength
 
     -- general settings
-    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
 
     local daisycells = {}
     local cell_amount = 8
