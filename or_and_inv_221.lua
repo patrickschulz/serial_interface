@@ -44,7 +44,7 @@ function layout(gate, _P)
     gate:merge_into(geometry.path_yx(generics.metal(1), {
         orgate_c:get_anchor("Z"), andgate:get_anchor("B")
     }, bp.sdwidth))
-    gate:merge_into(geometry.path_xy(generics.metal(1), {
+    gate:merge_into(geometry.path_yx(generics.metal(1), {
         orgate_b:get_anchor("Z"), nandgate:get_anchor("B")
     }, bp.sdwidth))
     gate:merge_into(geometry.path_yx(generics.metal(2), {
@@ -55,7 +55,7 @@ function layout(gate, _P)
                         andgate:get_anchor("Z")))
     gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.glength,
                                        bp.sdwidth):translate(
-                        nandgate:get_anchor("B")))
+                        nandgate:get_anchor("A")))
 
     -- ports
     gate:add_port("A", generics.metal(1), andgate:get_anchor("A"))
