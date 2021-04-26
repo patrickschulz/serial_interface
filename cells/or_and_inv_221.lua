@@ -17,26 +17,36 @@ function layout(gate, _P)
     local xpitch = bp.gspace + bp.glength
 
     -- or gate c
-    pcell.push_overwrites("logic/base", {rightdummies = 1})
+    pcell.push_overwrites("logic/base", {rightdummies = 0})
     local orgate_c = pcell.create_layout("logic/or_gate"):move_anchor("right")
     gate:merge_into_update_alignmentbox(orgate_c)
     pcell.pop_overwrites("logic/base")
 
+    local isogate = pcell.create_layout("logic/isogate")
+    isogate:move_anchor("left", orgate_c:get_anchor("right"))
+    gate:merge_into(isogate:copy())
+
     -- and gate
-    pcell.push_overwrites("logic/base", {leftdummies = 1, rightdummies = 1})
-    local andgate = pcell.create_layout("logic/and_gate"):move_anchor("left", orgate_c:get_anchor( "right"))
+    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
+    local andgate = pcell.create_layout("logic/and_gate"):move_anchor("left", isogate:get_anchor("right"))
     gate:merge_into_update_alignmentbox(andgate)
     pcell.pop_overwrites("logic/base")
 
+    isogate:move_anchor("left", andgate:get_anchor("right"))
+    gate:merge_into(isogate:copy())
+
     -- or gate b
-    pcell.push_overwrites("logic/base", {leftdummies = 1, rightdummies = 1})
-    local orgate_b = pcell.create_layout("logic/or_gate"):move_anchor("left", andgate:get_anchor( "right"))
+    pcell.push_overwrites("logic/base", {leftdummies = 0, rightdummies = 0})
+    local orgate_b = pcell.create_layout("logic/or_gate"):move_anchor("left", isogate:get_anchor("right"))
     gate:merge_into_update_alignmentbox(orgate_b)
     pcell.pop_overwrites("logic/base")
 
+    isogate:move_anchor("left", orgate_b:get_anchor("right"))
+    gate:merge_into(isogate:copy())
+
     -- nand gate
-    pcell.push_overwrites("logic/base", {leftdummies = 1})
-    local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left", orgate_b:get_anchor( "right"))
+    pcell.push_overwrites("logic/base", {leftdummies = 0})
+    local nandgate = pcell.create_layout("logic/nand_gate"):move_anchor("left", isogate:get_anchor("right"))
     gate:merge_into_update_alignmentbox(nandgate)
     pcell.pop_overwrites("logic/base")
 
