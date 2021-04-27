@@ -31,7 +31,7 @@ function layout(gate, _P)
     pcell.pop_overwrites("logic/dff")
 
     -- add 3 dummies to the left to match width of middle row
-    pcell.push_overwrites("logic/base", {rightdummies = 6})
+    pcell.push_overwrites("logic/base", {rightdummies = 9})
     local nand_in = pcell.create_layout("logic/nand_gate"):move_anchor("right",
                                                                        orandinv221_in:get_anchor(
                                                                            "left"))
@@ -66,7 +66,7 @@ function layout(gate, _P)
 
     pcell.push_overwrites("logic/base", {rightdummies = 1})
     local orandinv21 = pcell.create_layout("or_and_inv_21"):move_anchor("right",
-                                                                        orandinv221_buf:get_anchor(
+                                                                        inv_buf:get_anchor(
                                                                             "left"))
     orandinv21:flipy()
     gate:merge_into_update_alignmentbox(orandinv21)
@@ -94,7 +94,7 @@ function layout(gate, _P)
     gate:merge_into_update_alignmentbox(inv_out_right)
     pcell.pop_overwrites("logic/base")
 
-    pcell.push_overwrites("logic/base", {rightdummies = 4})
+    pcell.push_overwrites("logic/base", {rightdummies = 7})
     local inv_out_left = pcell.create_layout("logic/not_gate"):move_anchor(
                              "right", inv_out_right:get_anchor("left"))
     gate:merge_into_update_alignmentbox(inv_out_left)
@@ -375,13 +375,13 @@ function layout(gate, _P)
     gate:add_port("DIN", generics.metal(1), orandinv221_in:get_anchor("C2"))
     gate:add_port("DOUT", generics.metal(1), ff_out:get_anchor("QN"))
     gate:add_port("BOUT", generics.metal(1), ff_buf:get_anchor("QN"))
-    --[[ gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 +
+    gate:add_port("VDD", generics.metal(1), point.create(0, bp.separation / 2 +
                                                              bp.pwidth +
                                                              bp.powerspace +
                                                              bp.powerwidth / 2))
     gate:add_port("VSS", generics.metal(1), point.create(0, -bp.separation / 2 -
                                                              bp.nwidth -
                                                              bp.powerspace -
-                                                             bp.powerwidth / 2)) ]]
+                                                             bp.powerwidth / 2))
 end
 
