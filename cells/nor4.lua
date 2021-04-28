@@ -34,22 +34,16 @@ function layout(gate, _P)
     pcell.pop_overwrites("logic/base")
 
     -- draw connections
-    gate:merge_into(geometry.path_xy(generics.metal(2), {
+    gate:merge_into(geometry.path_yx(generics.metal(2), {
         orgate_a:get_anchor("Z"), norgate:get_anchor("A")
     }, bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(
                         orgate_a:get_anchor("Z")))
-    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
-                                       bp.sdwidth):translate(
-                        norgate:get_anchor("B")))
 
-    gate:merge_into(geometry.path_xy(generics.metal(2), {
+    gate:merge_into(geometry.path_yx(generics.metal(1), {
         orgate_b:get_anchor("Z"), norgate:get_anchor("B")
     }, bp.sdwidth))
-    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
-                                       bp.sdwidth):translate(
-                        orgate_b:get_anchor("Z")))
     gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
                                        bp.sdwidth):translate(
                         norgate:get_anchor("A")))

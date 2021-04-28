@@ -34,7 +34,7 @@ function layout(gate, _P)
     pcell.pop_overwrites("logic/base")
 
     -- draw connections
-    gate:merge_into(geometry.path_xy(generics.metal(2), {
+    gate:merge_into(geometry.path_yx(generics.metal(2), {
         andgate_a:get_anchor("Z"), nandgate:get_anchor("B")
     }, bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
@@ -44,15 +44,9 @@ function layout(gate, _P)
                                        bp.sdwidth):translate(
                         nandgate:get_anchor("B")))
 
-    gate:merge_into(geometry.path_xy(generics.metal(2), {
+    gate:merge_into(geometry.path_yx(generics.metal(1), {
         andgate_b:get_anchor("Z"), nandgate:get_anchor("A")
     }, bp.sdwidth))
-    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
-                                       bp.sdwidth):translate(
-                        andgate_b:get_anchor("Z")))
-    gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.sdwidth,
-                                       bp.sdwidth):translate(
-                        nandgate:get_anchor("A")))
 
     -- draw ports
     gate:add_port("A1", generics.metal(1), andgate_a:get_anchor("A"))
