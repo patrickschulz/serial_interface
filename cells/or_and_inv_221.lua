@@ -9,7 +9,10 @@
                 OR ------------- NAND
         B2 ---- OR
 ]] -- 
-function parameters() pcell.reference_cell("logic/base") end
+function parameters() 
+    pcell.reference_cell("logic/base") 
+    pcell.add_parameter("flipconnection", false)
+end
 
 function layout(gate, _P)
     local bp = pcell.get_parameters("logic/base");
@@ -57,9 +60,11 @@ function layout(gate, _P)
     gate:merge_into(geometry.path_yx(generics.metal(1), {
         orgate_b:get_anchor("Z"), nandgate:get_anchor("B")
     }, bp.sdwidth))
-    gate:merge_into(geometry.path_yx(generics.metal(2), {
-        andgate:get_anchor("Z"), nandgate:get_anchor("A")
-    }, bp.sdwidth))
+    gate:merge_into(geometry.path(generics.metal(2), 
+        geometry.path_points_yx(andgate:get_anchor("Z"), {
+            (_P.flipconnection and -1 or 1) * (bp.separation / 2 + bp.sdwidth / 2),
+            nandgate:get_anchor("A")
+    }), bp.sdwidth))
     gate:merge_into(geometry.rectangle(generics.via(1, 2), bp.glength,
                                        bp.sdwidth):translate(
                         andgate:get_anchor("Z")))
