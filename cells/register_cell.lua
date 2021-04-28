@@ -33,7 +33,13 @@ function layout(gate, _P)
         rows[i] = object.create()
         -- place cells
         local dff = pcell.create_layout("logic/dff", { enableQN = true, enableQ = false })
-        local orandinv221 = pcell.create_layout("or_and_inv_221", { flipconnection = true })
+        local orandinv221 = pcell.create_layout("logic/221_gate", { 
+            flipconnection = true, 
+            gate1 = "or_gate", 
+            gate2 = "or_gate", 
+            gate3 = "and_gate", 
+            gate4 = "nand_gate"
+        })
         local isogate = pcell.create_layout("logic/isogate")
         local inv = pcell.create_layout("logic/not_gate")
         local front = pcell.create_layout(fronts[i].gate, fronts[i].options)
