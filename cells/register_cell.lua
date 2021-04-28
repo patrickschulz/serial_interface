@@ -24,7 +24,7 @@ function layout(gate, _P)
     local rows = {}
     local fronts = { 
         { gate = "logic/and_gate", options = {} }, 
-        { gate = "logic/2_1_gate", options = { gate1 = "or_gate", gate2 = "nand_gate" } }, 
+        { gate = "logic/21_gate", options = { gate1 = "or_gate", gate2 = "nand_gate" } }, 
         { gate = "logic/not_gate", options = {} },
     }
     local nfingers = {}
