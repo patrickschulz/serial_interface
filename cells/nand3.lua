@@ -1,5 +1,3 @@
-
-
 --[[
 A1 ---- AND
         AND
@@ -27,10 +25,9 @@ function layout(gate, _P)
     pcell.pop_overwrites("logic/base")
 
     -- draw connections
-    gate:merge_into(geometry.path_xy(generics.metal(1), {
-        andgate:get_anchor("Z"), nandgate:get_anchor("B")
+    gate:merge_into(geometry.path_yx(generics.metal(1), {
+        andgate:get_anchor("Z"), nandgate:get_anchor("A")
     }, bp.sdwidth))
-
 
     -- draw ports
     gate:add_port("A1", generics.metal(1), andgate:get_anchor("A"))
