@@ -38,12 +38,12 @@ function layout(gate, _p)
                                                                  "right"))
     gate:merge_into_update_alignmentbox(u128)
 
-    u131 = pcell.create_layout("nor4"):flipy():move_anchor("top",
+    u131 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nor_gate" }):flipy():move_anchor("top",
                                                            u128:get_anchor(
                                                                "bottom"))
     gate:merge_into_update_alignmentbox(u131)
 
-    u132 = pcell.create_layout("nor4"):move_anchor("top",
+    u132 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nor_gate" }):move_anchor("top",
                                                    u131:get_anchor("bottom"))
     gate:merge_into_update_alignmentbox(u132)
 
@@ -57,22 +57,22 @@ function layout(gate, _p)
                                                                          "right"))
     gate:merge_into_update_alignmentbox(u142)
 
-    u143 = pcell.create_layout("and_or_inv_211"):move_anchor("left",
+    u143 = pcell.create_layout("logic/221_gate", { gate1 = "and_gate", gate2 = "and_gate", gate3 = "or_gate", gate4 = "nor_gate" }):move_anchor("left",
                                                              u128:get_anchor(
                                                                  "right"))
     gate:merge_into_update_alignmentbox(u143)
 
-    u167 = pcell.create_layout("and_or_inv_211"):move_anchor("right",
+    u167 = pcell.create_layout("logic/221_gate", { gate1 = "and_gate", gate2 = "and_gate", gate3 = "or_gate", gate4 = "nor_gate" }):move_anchor("right",
                                                              rcv_done_reg:get_anchor(
                                                                  "left"))
     gate:merge_into_update_alignmentbox(u167)
 
-    u124 = pcell.create_layout("and4"):flipy():move_anchor("right",
+    u124 = pcell.create_layout("logic/22_gate", { gate1 = "and_gate", gate2 = "and_gate", gate3 = "and_gate" }):move_anchor("top",
                                                            got_start_bit_reg:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(u124)
 
-    u175 = pcell.create_layout("and_or_inv_21"):move_anchor("right",
+    u175 = pcell.create_layout("logic/21_gate", { gate1 = "and_gate", gate2 = "nor_gate" }):move_anchor("right",
                                                             cmd_rcv_done_reg:get_anchor(
                                                                 "left"))
     gate:merge_into_update_alignmentbox(u175)
@@ -108,7 +108,7 @@ function layout(gate, _p)
 
     pcell.pop_overwrites("logic/dff")
 
-    u169 = pcell.create_layout("nor3"):flipy():move_anchor("right",
+    u169 = pcell.create_layout("logic/21_gate", { gate1 = "or_gate", gate2 = "nor_gate" }):flipy():move_anchor("right",
                                                            update_shift_reg_reg:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(u169)
@@ -123,7 +123,7 @@ function layout(gate, _p)
                                                                  "left"))
     gate:merge_into_update_alignmentbox(u153)
 
-    u149 = pcell.create_layout("nor3"):flipy():move_anchor("right",
+    u149 = pcell.create_layout("logic/21_gate", { gate1 = "or_gate", gate2 = "nor_gate" }):flipy():move_anchor("right",
                                                            u153:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(u149)
@@ -133,11 +133,11 @@ function layout(gate, _p)
                                                                          "left"))
     gate:merge_into_update_alignmentbox(u152)
 
-    u151 = pcell.create_layout("nand4"):move_anchor("right",
+    u151 = pcell.create_layout("logic/22_gate", { gate1 = "and_gate", gate2 = "and_gate", gate3 = "nand_gate" }):move_anchor("right",
                                                     u170:get_anchor("left"))
     gate:merge_into_update_alignmentbox(u151)
 
-    u139 = pcell.create_layout("or_and_inv_21"):flipy():move_anchor("right",
+    u139 = pcell.create_layout("logic/21_gate", { gate1 = "or_gate", gate2 = "nand_gate" }):flipy():move_anchor("right",
                                                                     u149:get_anchor(
                                                                         "left"))
     gate:merge_into_update_alignmentbox(u139)
@@ -207,42 +207,42 @@ function layout(gate, _p)
                                                                          "left"))
     gate:merge_into_update_alignmentbox(u160)
 
-    u161 = pcell.create_layout("and_or_inv_22"):move_anchor("right",
+    u161 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nand_gate" }):move_anchor("right",
                                                             u162:get_anchor(
                                                                 "left"))
     gate:merge_into_update_alignmentbox(u161)
 
-    u165 = pcell.create_layout("and_or_inv_22"):flipy():move_anchor("right",
+    u165 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nand_gate" }):flipy():move_anchor("right",
                                                                     u166:get_anchor(
                                                                         "left"))
     gate:merge_into_update_alignmentbox(u165)
 
-    u163 = pcell.create_layout("and_or_inv_22"):move_anchor("right",
+    u163 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nand_gate" }):move_anchor("right",
                                                             u164:get_anchor(
                                                                 "left"))
     gate:merge_into_update_alignmentbox(u163)
 
-    u159 = pcell.create_layout("and_or_inv_22"):flipy():move_anchor("right",
+    u159 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nand_gate" }):flipy():move_anchor("right",
                                                                     u160:get_anchor(
                                                                         "left"))
     gate:merge_into_update_alignmentbox(u159)
 
-    u157 = pcell.create_layout("and_or_inv_22"):flipy():move_anchor("right",
+    u157 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nand_gate" }):flipy():move_anchor("right",
                                                                     u158:get_anchor(
                                                                         "left"))
     gate:merge_into_update_alignmentbox(u157)
 
-    U1_1_3 = pcell.create_layout("half_adder"):move_anchor("right",
+    U1_1_3 = pcell.create_layout("logic/half_adder"):move_anchor("right",
                                                            u163:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(U1_1_3)
 
-    U1_1_2 = pcell.create_layout("half_adder"):flipy():move_anchor("right",
+    U1_1_2 = pcell.create_layout("logic/half_adder"):flipy():move_anchor("right",
                                                            u165:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(U1_1_2)
 
-    U1_1_1 = pcell.create_layout("half_adder"):move_anchor("right",
+    U1_1_1 = pcell.create_layout("logic/half_adder"):move_anchor("right",
                                                            u161:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(U1_1_1)
@@ -254,17 +254,17 @@ function layout(gate, _p)
     gate:merge_into_update_alignmentbox(u156)
 
 
-    u155 = pcell.create_layout("nand3"):flipy():move_anchor("right",
+    u155 = pcell.create_layout("logic/21_gate", { gate1 = "and_gate", gate2 = "nand_gate" }):flipy():move_anchor("right",
                                                            u156:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(u155)
 
-    u154 = pcell.create_layout("nor3"):flipy():move_anchor("right",
+    u154 = pcell.create_layout("logic/21_gate", { gate1 = "or_gate", gate2 = "nor_gate" }):flipy():move_anchor("right",
                                                            u155:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(u154)
 
-    u150 = pcell.create_layout("and_or_inv_22"):flipy():move_anchor("right",
+    u150 = pcell.create_layout("logic/22_gate", { gate1 = "or_gate", gate2 = "or_gate", gate3 = "nand_gate" }):flipy():move_anchor("right",
                                                            u157:get_anchor(
                                                                "left"))
     gate:merge_into_update_alignmentbox(u150)
