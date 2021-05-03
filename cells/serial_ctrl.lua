@@ -43,33 +43,22 @@ function layout(gate, _p)
                                                                "bottom"))
     gate:merge_into_update_alignmentbox(u131)
 
-    u132 = pcell.create_layout("nor4"):move_anchor("top",
-                                                   u131:get_anchor("bottom"))
+    u132 = pcell.create_layout("nor4"):move_anchor("top", u131:get_anchor("bottom"))
     gate:merge_into_update_alignmentbox(u132)
 
-    u136 = pcell.create_layout("logic/nand_gate"):move_anchor("left",
-                                                              u132:get_anchor(
-                                                                  "right"))
+    u136 = pcell.create_layout("logic/nand_gate"):move_anchor("left", u132:get_anchor("right"))
     gate:merge_into_update_alignmentbox(u136)
 
-    u142 = pcell.create_layout("logic/nor_gate"):flipy():move_anchor("left",
-                                                                     u131:get_anchor(
-                                                                         "right"))
+    u142 = pcell.create_layout("logic/nor_gate"):flipy():move_anchor("left", u131:get_anchor("right"))
     gate:merge_into_update_alignmentbox(u142)
 
-    u143 = pcell.create_layout("and_or_inv_211"):move_anchor("left",
-                                                             u128:get_anchor(
-                                                                 "right"))
+    u143 = pcell.create_layout("and_or_inv_211"):move_anchor("left", u128:get_anchor("right"))
     gate:merge_into_update_alignmentbox(u143)
 
-    u167 = pcell.create_layout("and_or_inv_211"):move_anchor("right",
-                                                             rcv_done_reg:get_anchor(
-                                                                 "left"))
+    u167 = pcell.create_layout("and_or_inv_211"):move_anchor("right", rcv_done_reg:get_anchor("left"))
     gate:merge_into_update_alignmentbox(u167)
 
-    u124 = pcell.create_layout("and4"):flipy():move_anchor("right",
-                                                           got_start_bit_reg:get_anchor(
-                                                               "left"))
+    u124 = pcell.create_layout("and4"):flipy():move_anchor("right", got_start_bit_reg:get_anchor("left"))
     gate:merge_into_update_alignmentbox(u124)
 
     u175 = pcell.create_layout("and_or_inv_21"):move_anchor("right",
