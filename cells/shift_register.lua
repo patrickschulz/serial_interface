@@ -11,13 +11,14 @@ function layout(gate, _P)
     local cell_amount = 8
 
     -- place cells
+    local register = pcell.create_layout("register_cell")
     for i = 1, cell_amount do
         if i == 1 then
-            daisycells[i] = pcell.create_layout("cells/register_cell"):move_anchor("right")
+            daisycells[i] = register:copy():move_anchor("right")
         elseif i % 2 == 1 then
-            daisycells[i] = pcell.create_layout("cells/register_cell"):move_anchor("bottom", daisycells[i - 1]:get_anchor("top"))
+            daisycells[i] = register:copy():move_anchor("bottom", daisycells[i - 1]:get_anchor("top"))
         else
-            daisycells[i] = pcell.create_layout("cells/register_cell"):flipy():move_anchor("bottom", daisycells[i - 1]:get_anchor("top"))
+            daisycells[i] = register:copy():flipy():move_anchor("bottom", daisycells[i - 1]:get_anchor("top"))
         end
         gate:merge_into_update_alignmentbox(daisycells[i])
     end
