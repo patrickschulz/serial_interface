@@ -47,17 +47,20 @@ function layout(gate, _P)
         rows[i] = object.create()
         -- place cells
         local front = pcell.create_layout(fronts[i].gate, fronts[i].options)
-        rows[i]:merge_into_update_alignmentbox(dff)
-        rows[i]:merge_into_update_alignmentbox(orandinv221:move_anchor("right", dff:get_anchor("left")))
-        isogate:move_anchor("right", orandinv221:get_anchor("left"))
-        rows[i]:merge_into(isogate)
-        rows[i]:merge_into_update_alignmentbox(inv:move_anchor("right", isogate:get_anchor("left")))
-        isogate:move_anchor("right", inv:get_anchor("left"))
-        rows[i]:merge_into(isogate)
+        local dffcopy = dff:copy()
+        local orandinv221copy = orandinv221:copy()
+        local invcopy = inv:copy()
+        rows[i]:merge_into_update_alignmentbox(dffcopy)
+        rows[i]:merge_into_update_alignmentbox(orandinv221copy:move_anchor("right", dff:get_anchor("left")))
+        isogate:move_anchor("right", orandinv221copy:get_anchor("left"))
+        rows[i]:merge_into(isogate:copy())
+        rows[i]:merge_into_update_alignmentbox(invcopy:move_anchor("right", isogate:get_anchor("left")))
+        isogate:move_anchor("right", invcopy:get_anchor("left"))
+        rows[i]:merge_into(isogate:copy())
         rows[i]:merge_into_update_alignmentbox(front:move_anchor("right", isogate:get_anchor("left")))
 
         -- store anchors for conenctions
-        for name, obj in pairs({ dff = dff, orandinv221 = orandinv221, inv = inv, front = front }) do
+        for name, obj in pairs({ dff = dffcopy, orandinv221 = orandinv221copy, inv = invcopy, front = front }) do
             for anchorname, anchor in pairs(obj:get_all_anchors()) do
                 rows[i]:add_anchor(string.format("%s.%s", name, anchorname), anchor)
             end
