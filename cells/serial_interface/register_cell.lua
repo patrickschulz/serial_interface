@@ -132,7 +132,7 @@ function layout(gate, _P)
         rows[3].inv:get_anchor("O") + point.create(0, -separation / 2 - bp.nwidth + bp.sdwidth / 2),
         rows[2].front:get_anchor("B1"),
     }, bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[2].front:get_anchor("B2")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].front:get_anchor("B2")))
 
     gate:merge_into_shallow(geometry.path(generics.metal(3), {
         rows[1].orandinv221:get_anchor("A"),

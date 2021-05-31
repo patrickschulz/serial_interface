@@ -51,21 +51,21 @@ function layout(gate, _P)
         end
 
         -- reset
-        gate:merge_into_shallow(geometry.path(generics.metal(4), {
+        gate:merge_into_shallow(geometry.path(generics.metal(3), {
             daisycells[i]:get_anchor("RST"), daisycells[i - 1]:get_anchor("RST")
         }, bp.sdwidth))
-        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(daisycells[i]:get_anchor("RST")))
+        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(daisycells[i]:get_anchor("RST")))
         if i == 2 then
-            gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(daisycells[1]:get_anchor("RST")))
+            gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(daisycells[1]:get_anchor("RST")))
         end
 
         -- update
-        gate:merge_into_shallow(geometry.path(generics.metal(4), {
+        gate:merge_into_shallow(geometry.path(generics.metal(3), {
             daisycells[i]:get_anchor("UPD"), daisycells[i - 1]:get_anchor("UPD")
         }, bp.sdwidth))
-        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(daisycells[i]:get_anchor("UPD")))
+        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(daisycells[i]:get_anchor("UPD")))
         if i == 2 then
-            gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(daisycells[1]:get_anchor("UPD")))
+            gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(daisycells[1]:get_anchor("UPD")))
         end
     end
 
