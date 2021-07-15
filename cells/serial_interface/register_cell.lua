@@ -42,7 +42,7 @@ function layout(gate, _P)
     local isogatemaster = pcell.create_layout("GF22FDX_SC8T_104CPP_BASE_CSC20SL/SC8T_FILLX1_CSC20SL")
     local isoname = pcell.add_cell_reference(isogatemaster, "isogate")
     --local invmaster = pcell.create_layout("logic/not_gate", { shiftoutput = 0 * xpitch / 2 }) -- TODO: shiftoutput
-    local invmaster = pcell.create_layout("GF22FDX_SC8T_104CPP_BASE_CSC20SL/SC8T_INVX1_MR_CSC20SL")
+    local invmaster = pcell.create_layout("GF22FDX_SC8T_104CPP_BASE_CSC20SL/SC8T_INVX1_CSC20SL")
     local invname = pcell.add_cell_reference(invmaster, "inv")
     local frontnames = { 
         --pcell.add_cell_reference(pcell.create_layout("logic/and_gate"), "front1"),
@@ -68,10 +68,11 @@ function layout(gate, _P)
         row.isogate1:move_anchor("right", row.orandinv221:get_anchor("left"))
         row.inv = gate:add_child(invname)
         row.inv:move_anchor("right", row.isogate1:get_anchor("left"))
-        row.isogate2 = gate:add_child(isoname)
-        row.isogate2:move_anchor("right", row.inv:get_anchor("left"))
+        ---row.isogate2 = gate:add_child(isoname)
+        ---row.isogate2:move_anchor("right", row.inv:get_anchor("left"))
         row.front = gate:add_child(frontnames[i])
-        row.front:move_anchor("right", row.isogate2:get_anchor("left"))
+        --row.front:move_anchor("right", row.isogate2:get_anchor("left"))
+        row.front:move_anchor("right", row.inv:get_anchor("left"))
 
         row.lastisogate = row.front -- fake isogate for dummy placement
         rows[i] = row
@@ -90,6 +91,16 @@ function layout(gate, _P)
         end
     end
 
+    -- place tap cells
+    local tapref = pcell.create_layout("GF22FDX_SC8T_104CPP_BASE_CSC20SL/SC8T_TAPZBX8_CSC20SL")
+    local tapname = pcell.add_cell_reference(tapref, "tap")
+    for i = 1, 3 do
+        local tap = gate:add_child(tapname)
+        tap:move_anchor("right", rows[i].lastisogate:get_anchor("left"))
+        rows[i].tap = tap
+    end
+
+
     -- flip second row
     for k, v in pairs(rows[2]) do
         v:flipy()
@@ -98,26 +109,30 @@ function layout(gate, _P)
     -- connections
     -- orandinv221 to dff
     for i = 1, 3 do
-        gate:merge_into_shallow(geometry.path(generics.metal(1), 
-            geometry.path_points_yx(rows[i].orandinv221:get_anchor("Z"), {
+        gate:merge_into_shallow(geometry.path(generics.metal(2), 
+            geometry.path_points_yx(rows[i].orandinv221:get_anchor("Z"):translate(200, 0), {
             rows[i].dff:get_anchor("D"),
         }), bp.sdwidth))
+        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[i].dff:get_anchor("D")))
     end
 
     gate:merge_into_shallow(geometry.path(generics.metal(1), 
-        geometry.path_points_xy(rows[2].front:get_anchor("Z"), {
+        geometry.path_points_xy(rows[2].front:get_anchor("Z"):translate(0, 127), {
         rows[2].inv:get_anchor("A")
     }), bp.sdwidth))
 
-    gate:merge_into_shallow(geometry.path(generics.metal(1), 
+    gate:merge_into_shallow(geometry.path(generics.metal(2), 
         geometry.path_points_yx(rows[2].inv:get_anchor("Z"), {
         rows[2].orandinv221:get_anchor("C1"),
     }), bp.sdwidth))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].inv:get_anchor("Z")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].orandinv221:get_anchor("C1")))
 
     gate:merge_into_shallow(geometry.path(generics.metal(1), 
         geometry.path_points_yx(rows[1].front:get_anchor("Z"), {
         rows[1].inv:get_anchor("A"),
     }), bp.sdwidth))
+
     gate:merge_into_shallow(geometry.path(generics.metal(2), 
         geometry.path_points_yx(rows[2].front:get_anchor("A"), {
             rows[1].inv:get_anchor("Z")
@@ -126,32 +141,31 @@ function layout(gate, _P)
     gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].front:get_anchor("A")))
 
     -- clk to ff_out
-    gate:merge_into_shallow(geometry.path(generics.metal(2), 
+    gate:merge_into_shallow(geometry.path(generics.metal(3), 
         geometry.path_points_yx(rows[3].inv:get_anchor("Z"), {
             -separation / 2 - bp.nwidth + bp.sdwidth / 2,
             rows[3].dff:get_anchor("CLK"),
     }), bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].inv:get_anchor("Z")))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].dff:get_anchor("CLK")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[3].inv:get_anchor("Z")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[3].dff:get_anchor("CLK")))
 
-    ---[[
-    gate:merge_into_shallow(geometry.path(generics.metal(2), 
+    gate:merge_into_shallow(geometry.path(generics.metal(3), 
         geometry.path_points_xy(rows[3].inv:get_anchor("Z") + point.create(0, -separation / 2 - bp.nwidth + bp.sdwidth / 2), {
-        rows[2].front:get_anchor("B1"),
+        rows[2].front:get_anchor("B2")
     }), bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].front:get_anchor("B2")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[2].front:get_anchor("B2")))
 
-    gate:merge_into_shallow(geometry.path(generics.metal(3), {
+    gate:merge_into_shallow(geometry.path(generics.metal(4), {
         rows[1].orandinv221:get_anchor("A"),
         rows[3].orandinv221:get_anchor("A"),
     }, bp.sdwidth))
     for i = 1, 3 do
-        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[i].orandinv221:get_anchor("A")))
+        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[i].orandinv221:get_anchor("A")))
     end
 
     -- reset
     gate:merge_into_shallow(geometry.path(generics.metal(2), 
-        geometry.path_points_yx(rows[2].front:get_anchor("B2"), {
+        geometry.path_points_yx(rows[2].front:get_anchor("B1"), {
         rows[2].front:get_anchor("Z") + point.create(0, separation / 2 + bp.nwidth - bp.sdwidth / 2),
         0,
         rows[2].orandinv221:get_anchor("A"),
@@ -168,8 +182,6 @@ function layout(gate, _P)
 
     gate:merge_into_shallow(geometry.path(generics.metal(2), 
         geometry.path_points_yx(rows[2].front:get_anchor("Z"), {
-            separation / 2 + bp.sdwidth / 2,
-            rows[2].orandinv221:get_anchor("C2") + point.create(xpitch, -separation / 2 - bp.sdwidth / 2),
             rows[2].orandinv221:get_anchor("B1")
     }), bp.sdwidth))
     gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].orandinv221:get_anchor("B1")))
@@ -178,71 +190,73 @@ function layout(gate, _P)
     gate:merge_into_shallow(geometry.path(generics.metal(2), 
         geometry.path_points_yx(
         rows[3].front:get_anchor("Z"), {
-            separation / 2 + bp.sdwidth / 2,
+            rows[3].orandinv221:get_anchor("C1"):translate(-xpitch * 2, -separation/2),
             rows[3].orandinv221:get_anchor("C1")
     }), bp.sdwidth))
     gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].orandinv221:get_anchor("C1")))
     gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].front:get_anchor("Z")))
 
-    gate:merge_into_shallow(geometry.path(generics.metal(3), 
+    gate:merge_into_shallow(geometry.path(generics.metal(4), 
         geometry.path_points_yx(rows[3].front:get_anchor("Z"), {
         rows[1].orandinv221:get_anchor("C1")
     }), bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[1].orandinv221:get_anchor("C1")))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[3].front:get_anchor("Z")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[1].orandinv221:get_anchor("C1")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[3].front:get_anchor("Z")))
 
-    gate:merge_into_shallow(geometry.path(generics.metal(3), 
+    gate:merge_into_shallow(geometry.path(generics.metal(4), 
         geometry.path_points_xy(rows[3].orandinv221:get_anchor("B1"), {
-        rows[1].orandinv221:get_anchor("B1"), rows[1].orandinv221:get_anchor("B1")
+        rows[1].orandinv221:get_anchor("B1")
     }), bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[3].orandinv221:get_anchor("B1")))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[1].orandinv221:get_anchor("B1")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[3].orandinv221:get_anchor("B1")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[1].orandinv221:get_anchor("B1")))
 
     gate:merge_into_shallow(geometry.path(generics.metal(2),
         geometry.path_points_yx(rows[3].front:get_anchor("A"), {
-            separation / 2 + bp.nwidth - bp.sdwidth / 2,
+            rows[3].orandinv221:get_anchor("B1"):translate(0, -separation / 2),
             rows[3].orandinv221:get_anchor("B1")
     }), bp.sdwidth))
     gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].orandinv221:get_anchor("B1")))
     gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].front:get_anchor("A")))
 
-    gate:merge_into_shallow(geometry.path(generics.metal(3), {
+    gate:merge_into_shallow(geometry.path(generics.metal(4), {
         rows[3].orandinv221:get_anchor("C2"), rows[2].orandinv221:get_anchor("C2")
     }, bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[3].orandinv221:get_anchor("C2")))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[2].orandinv221:get_anchor("C2")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[3].orandinv221:get_anchor("C2")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[2].orandinv221:get_anchor("C2")))
 
+    
     -- ff_in_q, bit_out and chain_out
     for i = 1, 3 do
         local yinvert = (i % 2 == 0) and -1 or 1
-        gate:merge_into_shallow(geometry.path(generics.metal(2), 
+        gate:merge_into_shallow(geometry.path(generics.metal(3), 
             geometry.path_points_yx(rows[i].dff:get_anchor("QN"), {
                 yinvert * (separation / 2 + bp.sdwidth / 2),
-                rows[i].orandinv221:get_anchor("B2")
+                rows[i].orandinv221:get_anchor("B2"):translate(yinvert * 10, yinvert * 80)
         }), bp.sdwidth))
-        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[i].dff:get_anchor("QN")))
-        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[i].orandinv221:get_anchor("B2")))
+        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[i].dff:get_anchor("QN")))
+        gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[i].orandinv221:get_anchor("B2"):translate(yinvert * 10, yinvert * 80)))
     end
 
-    gate:merge_into_shallow(geometry.path(generics.metal(2), 
+    gate:merge_into_shallow(geometry.path(generics.metal(3), 
         geometry.path_points_xy(rows[1].orandinv221:get_anchor("B2"), {
         rows[2].orandinv221:get_anchor("C2")
     }), bp.sdwidth))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[1].orandinv221:get_anchor("B2")))
 
     -- clk connections
-    gate:merge_into_shallow(geometry.path(generics.metal(3), {
+    gate:merge_into_shallow(geometry.path(generics.metal(4), {
         rows[2].dff:get_anchor("CLK"), rows[1].dff:get_anchor("CLK")
     }, bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[2].dff:get_anchor("CLK")))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 3), bp.sdwidth, bp.sdwidth):translate(rows[1].dff:get_anchor("CLK")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[2].dff:get_anchor("CLK")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[1].dff:get_anchor("CLK")))
 
-    gate:merge_into_shallow(geometry.path(generics.metal(3), 
+    gate:merge_into_shallow(geometry.path(generics.metal(4), 
         geometry.path_points_yx(rows[3].inv:get_anchor("A"), {
             separation / 2 + bp.sdwidth / 2,
             rows[2].dff:get_anchor("CLK")
     }), bp.sdwidth))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[3].inv:get_anchor("A")))
-    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 2), bp.sdwidth, bp.sdwidth):translate(rows[2].dff:get_anchor("CLK")))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[3].inv:get_anchor("A"):translate(0, 30)))
+    gate:merge_into_shallow(geometry.rectangle(generics.via(1, 4), bp.sdwidth, bp.sdwidth):translate(rows[2].dff:get_anchor("CLK")))
     --]]
 
     gate:set_alignment_box(
@@ -251,12 +265,13 @@ function layout(gate, _P)
     )
 
     -- add ports
-    gate:add_port("CLK", generics.metal(1), rows[3].inv:get_anchor("A"))
-    gate:add_port("RST", generics.metal(1), rows[2].front:get_anchor("B1"))
-    gate:add_port("UPD", generics.metal(1), rows[1].front:get_anchor("B"))
-    gate:add_port("DIN", generics.metal(1), rows[1].orandinv221:get_anchor("C2"))
-    gate:add_port("DOUT", generics.metal(1), rows[3].dff:get_anchor("QN"))
-    gate:add_port("BOUT", generics.metal(1), rows[2].dff:get_anchor("QN"))
+    gate:add_port("clk", generics.metal(1), rows[3].inv:get_anchor("A"))
+    gate:add_port("enable", generics.metal(1), rows[3].front:get_anchor("A"))
+    gate:add_port("reset", generics.metal(1), rows[2].front:get_anchor("B1"))
+    gate:add_port("update", generics.metal(1), rows[1].front:get_anchor("B"))
+    gate:add_port("chain_in", generics.metal(1), rows[1].orandinv221:get_anchor("C2"))
+    gate:add_port("chain_out", generics.metal(1), rows[3].dff:get_anchor("QN"))
+    gate:add_port("bit_out", generics.metal(1), rows[2].dff:get_anchor("QN"))
     gate:add_port("VDD", generics.metal(1), rows[3].dff:get_anchor("top"))
     gate:add_port("VSS", generics.metal(1), rows[1].dff:get_anchor("bottom"))
 end
